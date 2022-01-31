@@ -1,0 +1,51 @@
+Consuming Data from an API
+
+A data-backed application is only as good as the data it has - and a great way to get a lot of data is through an API. 
+The idea of an API is actually very general, but in the modern day usually refers to "asking some other service to give you (some of) their data." 
+A lot of apps are built this way, especially when starting out, but there are some steps and hoops to get it working.
+
+## Objective 01 ## 
+Connect to the Twitter API and query for tweets by various parameters
+
+## Overview ##
+Twitter - the id of society - a fast and rich data source. Used cleverly, we can query the Twitter API to check the pulse on a variety of issues.
+Or at least stay up to date on which celebrity is doing what where.
+
+API stands for Application Programming Interface, and it is essentially a specification for how components of an application can communicate and share/cooperate. 
+You can think of it as a contract - by having an API, anybody who works with the system knows what to expect and what they should do to get desired results. 
+One of the main original APIs was for graphical programs. 
+Windows exposes an API for interacting with the underlying operating system, which Windows desktop apps must use in order to behave as expected.
+
+These days the term API is usually in reference to third party APIs accessed over the web, such as the Twitter API we will be using. 
+In this case it is a true API, but you could also essentially call it “somebody else’s database”.
+They have their own full web application, and they’re agreeing to give you a peek (possibly with conditions and restrictions or cost).
+
+## Follow Along ##
+Twitter is an entity with valuable data - and while they do grant access, it does require jumping through a few hoops. 
+First, you need to be signed up for a Twitter account (and have given Twitter a valid phone number).
+
+Then, apply for developer access (Links to an external site.) - you’ll have to answer questions about your intended use of the API. 
+In general, write that you are working on a school project, and not planning to use the API for retweets/content creation (no spam-bot behavior).
+
+Do this ahead of class, so you’re ready to go when lecture starts. Approval can sometimes take a week or more.
+
+Resource - https://github.com/bisguzar/twitter-scraper
+
+Resource - https://docs.tweepy.org/en/stable/install.html
+
+Resource - https://restfulapi.net/idempotent-rest-apis/
+
+Resource - https://developer.twitter.com/en/docs/twitter-api/v1/tweets/timelines/overview
+
+Resource - https://apilist.fun/
+
+Tons of API's out there ^ has a list of API's availalbe for devs.
+
+Resource - https://developer.twitter.com/en/docs/tutorials/step-by-step-guide-to-making-your-first-request-to-the-twitter-api-v2
+
+Resource - https://picnicss.com/
+
+Resource - https://getbootstrap.com/
+
+
+

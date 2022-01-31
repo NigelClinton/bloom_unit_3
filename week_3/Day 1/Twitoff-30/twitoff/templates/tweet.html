@@ -1,0 +1,28 @@
+<html>
+  <body>
+    <h3><a href="./">Home</a></h3>
+    <h2>Create Tweet</h2>
+    <form method="POST" action="/tweet">
+      <input type="text" name="tweet">
+      <input type="submit" value="Add">
+    </form>
+
+    <h2>Tweets</h2>
+    <h4>id, name</h4>
+    <table>
+      {% for user in users %}
+        <tr>
+          <td>
+            {{user.tweet}}
+          </td>
+          <td>
+            <form method="POST" action="./delete" style="display: inline">
+              <input type="hidden" value="{{user.tweet}}" name="tweet">
+              <input type="submit" value="Delete">
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+  <body>
+<html>

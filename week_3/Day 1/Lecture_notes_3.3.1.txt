@@ -1,0 +1,121 @@
+Web Application Development with Flask
+
+What is a web application? 
+It’s a pretty overloaded term, but in general, refers to any sort of useful interactive tool you can load in a web browser. 
+In this module, we’ll break down the specific components of a web application, and learn how to develop our own basic web application using the Flask Python framework.
+
+##Objective 01 ##
+Distinguish between front-end, back-end, database, and what tasks are appropriate for which
+
+## Overview ## 
+Web applications are built on a relatively thick stack - from the client (user with their browser) over a network to the back-end (server) and database (for data persistence). 
+As a data scientist you won’t master any particular piece, but you should understand the whole picture.
+
+A web application is a user-facing piece of software implemented with a client-server architecture. 
+The client (the user’s browser) makes requests - specifically, HTTP (Hypertext Transfer Protocol) requests over a network (the Internet, or a local network for e.g. internal corporate web applications).
+
+The server receives this request, and then builds and sends a response - generally, a mixture of HTML/CSS and JavaScript, a.k.a. “a web page.” 
+The client receives the response, and the web browser renders it so the user can see whatever it was they asked for.
+
+## Follow Along ##
+From the above summary, it’s fairly clear what the *front-end* of a web application is - specifically, it’s that HTML/CSS and JavaScript returned in response to user requests. 
+But what’s the difference between the back-end and the database?
+
+* The *back-end* is the direct server receiving requests and handling the routing/business logic to determine and send the appropriate response. 
+* The *database* is a generally separate server where data is actually persisted - saved in a durable fashion, for later retrieval by the web application. 
+* In fact, many web applications are essentially highly usable database querying machines - they let a user interact with a front-end, send requests to a back-end which gets or changes data in a database.
+
+Why separate the back-end and the database? A useful model is to have a back-end server application that is stateless (or close to it) - that is, it doesn’t persist or save or depend on persisting or saving things. 
+It just has the appropriate logic to respond as desired in a given situation - and as such, it’s much easier to scale, spin up or down extra instances, and so forth.
+
+Now that you know a bit about the pieces, consider this example of a simple full-stack web application:
+
+Front-end: a webpage styled with simple CSS (e.g. Bootstrap), listing TODO items for a user in a bullet point list
+Back-end: a Flask application that receives requests for returning, creating, or completing/deleting TODOs, and returns responses with the appropriate TODOs for the front-end to render
+Database: a PostgreSQL instance that stores the actual TODO data for users, which the back-end uses to persist and retrieve data
+
+#===========================================================================================================================================================================================================================
+
+## Objective 02 ##
+Create a simple Python web application that exposes an API to URL endpoints
+
+## Overview ##
+Now that you know the basics of what a web application is, it’s time to build our own! We’ll be focusing on the back-end.
+Building a simple Python web application with Flask (a microframework) to handle and return requests to URL endpoints.
+
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/")
+def hello():
+    return "Hello World!"
+“Hello World!” with Flask is as simple as that - 5 lines of code. Let’s understand each one by one.
+
+## Follow Along ##
+Let's break down each of the lines of the above example.
+
+from flask import Flask - you’ve seen plenty of lines like this. We’re importing a specific class we want (Flask) from a package (flask). The Flask class will allow us to instantiate our own Flask applications!
+
+app = Flask(__name__) - 
+instantiate our own Flask application! It really is just this, __name__ is a bit of Python magic to know the name of the module the execution is occurring in (and it’s actually optional, though nice to tell it to Flask). 
+Also note that this is in global scope, so your linter may complain (you can use the all-capitalized variable name APP instead to reflect that it’s global), but it is valid code.
+
+@app.route("/") - this is a decorator, which is actually a function that takes a function, augments it, and returns it. 
+That may sound scary, but all it’s doing is what it says - routing requests to the base / route (the host of the application, without any other path) to be served by this function.
+
+def hello(): - defining the function to be decorated, which will be invoked by requests to /. 
+The name is actually fairly arbitrary, as far as Flask is concerned - but do try to pick good names for your benefit. 
+This is somewhat like views in other frameworks (e.g. Django), though a good bit lighter and simpler.
+
+return "Hello World!" - the response from our function. 
+It means that requests to / will receive a response "Hello World!" 
+Flask responses can be fancy templates (HTML/CSS and JS), but they can also just be strings, and the latter can be pretty useful for fast developing and prototyping.
+
+#===========================================================================================================================================================================================================================
+
+## NOTES ##
+
+Resource - https://flask-sqlalchemy.palletsprojects.com/en/2.x/
+
+Resource - https://flask.palletsprojects.com/en/2.0.x/
+
+Front end, back end, and database for this Sprint
+
+3 layers of client server architecture -
+
+Client > Application > Database
+
+The front end of a web application is - specificlly, it's that HTML/CC and JavaScript returned in response to user requests.
+Backend - is the direct server receiving requests and handling the routing / business logic to determine and send the appropriate response.
+Database - The database is a generally seperate server where data is actually persisted - saved in a durable fashion for later retrieval by the web application.
+
+Why separate the back end and the database - because it becomes easier to scale and create extra instances.
+When you have them seperated out, it becomes easier to scale.
+
+Fullstack - front end(what you see in the web browser), application(receives requests and processes to reutrn a response to front end), database.
+
+What is HTTP?
+
+HTTP is a protocol which allows for the fetching of resources, such as HTML documents. 
+It is the foundation of any data exchange on the Web and it is a client-server protocol, which means requests are initiated by the recipient, usually the Web browser.
+A complete document is reconstructed from the different sub-documents fetched, for instance text, layout description, images, videos, scripts, and more.
+
+GET - The GET method requests representation of the specified resource. Requests using GET should only retrieve data.
+HEAD - The HEAD mehtod asks for a response identical to that of a GET request, but without the response body.
+POST - The POST method is used to submit an entity to the specified resource, often causing a change in the state or side effects on the server.
+PUT - The PUT mothod replaces all current representations of the target resouce with the request payload.
+DELETE - The DELETE method deletes the specified resource.
+CONNECT - The CONNECT method establishes a tunnel to the server identified by the target resource.
+OPTIONS - The OPTIONS method is used to descirbe the communitcation options for the target resource.
+TRACE - The TRACE method performs a message loop-back test along the path to the target resource.
+PATCH - The PATCH method is used to apply partial modifications to a resouce.
+
+A web framework or web application framework is a software framework that is designed to support the development of web applications including web services, web resources, and web API's.
+Web frameworks provide a standard way to build and deploy web applications on the world wide web.
+
+Flask is a Micro framework. 
+Flask doesn't specify what database you have to use.
+
+
+
+## SLIDES ##
