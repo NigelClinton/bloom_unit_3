@@ -1,0 +1,322 @@
+## LECTURE 3.2 ##
+
+## NOTES ##
+
+## Objective 01 ##
+
+* Create a basic Python class, with a constructor, methods, and fields
+
+## OVERVIEW ##
+
+# Python is a pragmatic multi-paradigm language, and object-oriented programming is one of the most important and widely used of its supported paradigms.
+# In this module you’ll learn how to make a basic Python class, and some of the common language used to describe elements of code in object-oriented programming.
+
+# Classes are the top level organizational structure in OOP. They are the “blueprints” for the different objects that will exist within our program.
+
+# For example, if a developer writes a Player class, they can then use this blueprint to create many different copies of Player objects throughout a program.
+
+# Classes contain:
+
+# Fields - also known as attributes or properties. They hold state information about a specific instance of an object. 
+# Examples might include name, size, or image.
+
+# Methods - functions that belong to a specific class. They represent the behaviors this object should have. 
+# If we continue to think about the Player class, it might have methods such as move() or jump().
+
+# Constructors - special methods, defined with init() in Python, that are used to instantiate an object of this class.
+
+# Self - a keyword used to refer to class-level variables and methods. 
+# These have scope across the entire class. 
+# Variables may also be declared normally and will have scope limited to the block of code they are declared within.
+
+#=========================================================================================================================================================================
+
+## FOLLOW ALONG ##
+
+# Consider the following class as a way to represent complex numbers.
+
+class Complex:
+    def __init__(self, realpart, imagpart):
+        self.r = realpart
+        self.i = imagpart
+
+x = Complex(3.0, -4.5)
+x.r, x.i
+
+# Execute the above code in a Python repl/environment of your choice (a notebook can work too). 
+# Make multiple instances of the class, inspect them, and try to use them interactively to perform basic mathematics (arithmetic).
+
+#=========================================================================================================================================================================
+
+## Objective 02 ##
+
+* Write stylistic PEP 8 Python code, and give and receive a basic code review.
+
+## OVERVIEW ##
+
+# You say potayto, your coworker says potahto - how do you work on the same code? 
+# Style and code reviews are about consensus and common understanding - there is no single “right” style, but agreeing and doing things similarly makes the whole codebase more homogeneous and easier to read.
+
+# Code style refers to the “look” and formatting of the code - it is orthogonal to the actual logic or results. 
+# That is, code with “bad style” can still run and get results.
+
+# So why worry about style? 
+# Because, though it can run, code that is harder to read is more error prone, and harder to fix the inevitable errors that occur. 
+# It’s also harder to extend and build on, which is the real long term goal of a production codebase.
+
+# In this module we will explore what makes for good style, and tools that help us enforce it. 
+# Note that in some contexts this is referred to as “linting”, and the corresponding tools as “linters.”
+
+#=========================================================================================================================================================================
+
+## FOLLOW ALONG ##
+
+
+import math
+sys
+
+def example1():
+    ####This is a long comment. This should be wrapped to fit within 72 characters.
+    some_tuple=(   1,2, 3,'a'  );
+    some_variable={'long':'Long code lines should be wrapped within 79 characters.',
+    'other':[math.pi, 100,200,300,9876543210,'This is a long string that goes on'],
+    'more':{'inner':'This whole logical line should be wrapped.',some_tuple:[1,
+    20,300,40000,500000000,60000000000000000]}}
+    return (some_tuple, some_variable)
+
+def example2(): return {'has_key() is deprecated':True}.has_key({'f':2}.has_key(''));
+
+class Example3(   object ):
+    def __init__    ( self, bar ):
+     #Comments should have a space after the hash.
+     if bar : bar+=1;  bar=bar* bar   ; return bar
+     else:
+                    some_string = """
+                       Indentation in multiline strings should not be touched.
+Only actual code should be reindented.
+"""
+                    return (sys.path, some_string)
+
+# Pretty ugly, yes? And it’s not just an aesthetic problem - the dense and at times inconsistent way the code is written means, even though it runs, it’s hard to read and understand.
+
+# Now consider this version of it:
+
+
+import math
+import sys
+
+def example1():
+    # This is a long comment. This should be wrapped to fit within 72
+    # characters.
+    some_tuple = (1, 2, 3, 'a')
+    some_variable = {
+        'long': 'Long code lines should be wrapped within 79 characters.',
+        'other': [
+            math.pi,
+            100,
+            200,
+            300,
+            9876543210,
+            'This is a long string that goes on'],
+        'more': {
+            'inner': 'This whole logical line should be wrapped.',
+            some_tuple: [
+                1,
+                20,
+                300,
+                40000,
+                500000000,
+                60000000000000000]}}
+    return (some_tuple, some_variable)
+
+
+def example2(): return ('' in {'f': 2}) in {'has_key() is deprecated': True}
+
+
+class Example3(object):
+    def __init__(self, bar):
+        # Comments should have a space after the hash.
+        if bar:
+            bar += 1
+            bar = bar * bar
+            return bar
+        else:
+            some_string = """
+                       Indentation in multiline strings should not be touched.
+Only actual code should be reindented.
+"""
+            return (sys.path, some_string)
+
+# Much better! 
+# Yes, it’s many more lines (a lot of style rules are about breaking things out), but with more whitespace comes more readability. 
+# It’s also consistent, following a standard that is widely used in the Python world.
+
+# We’ll also discuss peer code reviews - remember, in your career you will read more code than you write! 
+# Consider the following tips for reading and giving feedback on code from other people:
+
+* Can you follow the code flow/layout?
+* Can you understand the logic/reasoning for what it is doing?
+* Could you build with (import and use) or extend on it (as a developer adding more to the codebase)?
+
+RESOURCE - https://pep8.org/
+
+#=========================================================================================================================================================================
+
+## SLIDES ## 
+
+OOP, Code Style, and Reviews
+
+Overview
+When you’re a software engineer, you’re not just writing code for your own
+immediate needs - you’re building a system that others will work on, from
+coworkers and open-source collaborators to future-you.
+• To do this, we must write code based on shared principles of design and style.
+• In this module we will learn the basic principles of object-oriented
+programming, the most common paradigm for the design and building of large
+codebases.
+• We will also learn about standard code style and tooling, and the code review
+process.
+
+Objective
+• Create a basic Python class, with a constructor, methods, and fields
+• Write stylistic (PEP 8) Python code
+• Give and receive a basic code review
+
+## OOP ## 
+
+What is OOP
+• Object oriented programming refers to the use of objects in programming.
+• It is a methodology or paradigm to design a program using classes and
+objects.
+• Aims to implement/model real-world things and relations between them.
+• As software objects that have some data associated with them and can
+perform certain functions.
+
+Terms & Concepts
+
+• Terms
+• Class
+• Object
+• Method
+• Instance
+• Concepts
+• Inheritance
+• Encapsulation
+• Abstraction
+• Polymorphism
+
+Class
+• Classes are the top level organizational structure in OOP.
+• A class is a user defined prototype/blueprint from which objects are created.
+• It represents the set of properties or methods that are common to all objects
+of one type.
+• Constructors are used for initializing new objects.
+• Fields are variables that provides the state of the class and its objects, and
+methods are used to implement the behavior of the class and its objects.
+
+Object
+• The basic unit of OOP.
+• Objects correspond to things found in the real world.
+• They may represent a person, a place or any item that the program must
+handle.
+• An object is an instance of a class.
+
+Inheritance
+• Inheritance is the ability of one object to acquire some or all properties of
+another object.
+• It allows code reusability.
+
+Encapsulation
+• Encapsulation means that we want to hide unnecessary details from the user.
+• For example, when we call from our mobile phone, we select the number
+and press call button. But the entire process of calling or what happens
+from the moment we press or touch the call button to the moment we
+start having a phone conversation is hidden from us.
+
+Abstraction
+• Abstraction means, showcasing only the required things to the outside world
+while hiding the details.
+• The concept of abstraction focuses on what an object does instead of how it
+works.
+• Data abstraction is often used for managing large and complex programs.
+
+Polymorphism
+• Polymorphism is a concept, which allows us to redefine the way something
+works, by either changing how it is done or by changing the parts used to get
+it done.
+
+OOP in Python
+• Python is an object oriented programming language.
+• Almost everything in Python is an object.
+
+Classes in Python
+• Classes contain
+• Fields - also known as attributes or properties. They hold state information
+about a specific instance of an object. Examples might include name, size, or
+image.
+• Methods - functions that belong to a specific class. They represent the
+behaviors this object should have.
+• Constructors - special methods that are used to instantiate an object of this
+class.
+• self - a keyword used to refer to class-level variables and methods. These have
+scope across the entire class.
+
+__init__ & self
+• Constructor is the method that’s called when the class name is called.
+• It is always named __init__( )
+• self parameter
+• is required in the definition
+• it must come first, before all other parameters
+• it is a reference to the instance itself
+• every method call automatically passes self
+• every variable prefixed with self is available to every method in the class
+
+Code Style
+
+Code Style
+• Code style refers to the “look” and formatting of the code.
+• Code with “bad style” can still run and get results.
+• So why worry about style?
+• Because, though it can run, code that is harder to read is more error
+prone, and harder to fix when errors occur.
+• It’s also harder to extend and build on, which is the real long term goal of
+a production codebase.
+
+Code Review
+
+Code Review
+• Design
+• How is the overall design.
+• Does it fit well with existing codebase
+• Functionality
+• Does it fulfill the requirements
+• Does it do what it’s supposed to do
+• Complexity
+• Is the code more complex than it needs to be
+• Functions, Classes, Modules
+
+Code Review
+• Look & Feel
+• How does the UI look.
+• Is it user friendly.
+• Spelling and grammatical errors
+• Naming
+• Are the names for variables, functions, classes, etc clear.
+• Comments
+• Are the comments clear and useful.
+• Do they explain what and why
+
+Code Review
+• Style
+• Does the code conform to the style guide.
+• Tests
+• Unit tests are appropriate and complete.
+• Documentation
+• Code is appropriately documented.
+
+Feedback
+• Constructive
+• Positive
+• Respectful
+
+In the command palette( Ctrl-Shift-P or cmd-Shift-P ) autopep8

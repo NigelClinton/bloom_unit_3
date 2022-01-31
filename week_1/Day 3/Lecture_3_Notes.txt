@@ -1,0 +1,189 @@
+## Objective 01 ##
+
+* Launch Docker containers and execute programs on them
+
+## Overview ##
+
+# The purpose of containers is to run code, reliably and reproducibly. 
+# Even something as simple as “Hello World!”, achieved identically and independently of platform, is a remarkable and powerful thing.
+
+# What is a container? Just something that holds other things - in the context of computation, a system that holds programs. 
+# The difference between a container and the computer you’re using right now is a container is abstracted and virtualized - it is independent of the hardware and (external) operating system it runs on.
+
+## Follow Along ##
+
+# Once installed, Docker “Hello World!” is as simple as:
+
+docker run hello-world
+
+# Try it out! You should see something like:
+
+docker run hello-world
+
+Unable to find image 'hello-world:latest' locally
+latest: Pulling from library/hello-world
+ca4f61b1923c: Pull complete
+Digest: sha256:ca0eeb6fb05351dfc8759c20733c91def84cb8007aa89a5bf606bc8b315b9fc7
+Status: Downloaded newer image for hello-world:latest
+
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+...
+
+# But what’s really happening?
+
+# Docker is looking for a container named hello-world
+# It doesn’t find it!
+# But not to worry - it looks for and pulls it from the official Docker Cloud
+# After some network and hash/checksumming (basically “making sure it gets the right thing”)…
+# The image is downloaded and executed!
+# The result - well, it prints “Hello from Docker!” This is hello-world, after all.
+
+# But the somewhat subtle and crazy thing here is that this message is the single purpose of an entire operating system, contained and reproduced exactly (byte-for-byte) whenever and wherever you run it.
+
+# So, while “Hello World!” may not exactly pay the bills, the general ideal that it demonstrates is clearly powerful. 
+And it’s up to us to use that power to make our code reliable and reproducible.
+
+## Objective 02 ##
+
+* Create and customize a Dockerfile to build a basic custom container
+
+## Overview ##
+
+# Running containers other people make is useful - 
+* There’s a lot of premade containers out there. But the real power of Docker is in customizing your own container, and reproducibly running your own code in a variety of environments.
+
+# To customize Docker, you must write a Dockerfile - 
+* A text file “recipe” that specifies the container/Linux distribution you are basing your container on, and then adds additional environment and setup steps.
+
+## Follow Along ##
+
+# Example MVP Dockerfile for Python:
+
+FROM debian
+
+### So logging/io works reliably w/Docker
+ENV PYTHONUNBUFFERED=1
+### UTF Python issue for Click package (pipenv dependency)
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+### Need to explicitly set this so `pipenv shell` works
+ENV SHELL=/bin/bash
+
+### Basic Python dev dependencies
+RUN apt-get update && \
+  apt-get upgrade -y && \
+  apt-get install python3-pip curl -y && \
+  pip3 install pipenv
+
+# Then complete the following steps:
+
+* Put the above in a Dockerfile
+* docker build . -t python
+* Wait (may take awhile, especially if it’s your first container)
+* docker run -it python /bin/bash
+
+# You’re now in a reproducible environment with pipenv! 
+# When you’re done, exit - but note that if you run it again it will actually be a new copy of the container, i.e. you don’t see what you did in the earlier version of the container.
+
+# If you want to reuse a single container, read up on docker restart and docker attach - but the idea of a container always being clean is actually quite powerful, as that is where reproducible builds come from. 
+# With a more elaborate Dockerfile (that specifies an actual package to install and run), you can have a contained and reproducible app that you know runs the same everywhere.
+
+#=====================================================================================================================================================================================================================
+
+## SLIDES ##
+
+## Containers & Reproducible Builds ##
+
+## Overview ##
+
+• For code to really work, it must be reproducible.
+• We have learned about virtual environments, which goes a long way towards giving
+reproducible builds.
+• But for even greater reproducibility (and deployability), containers are the tool of choice.
+• A container is a minimal virtual operating system, complete with all the software needed
+to run the desired application.
+• Because they pack everything together, they are truly identical to run regardless of host.
+• Docker is a common standard and tool for containers, and we will use it to build and
+run Linux containers with Python code.
+
+## Objectives ##
+
+• Launch Docker containers and access/execute programs on them
+• Create/customize a Dockerfile to build a basic custom container
+
+## Virtualization ##
+
+• Process by which the hardware elements of a computer—processors, memory,
+storage is divided into multiple virtual computers.
+• These computers are called virtual machines (VMs)
+• Each VM is now an independent computer.
+• Types of Virtualization
+• Desktop virtualization
+• Operating system virtualization
+• Server virtualization
+
+## Hypervisor ##
+
+• A hypervisor makes virtualization possible.
+• It takes physical resources and divides them up so that virtual environments
+can use them.
+• It is software that sits in between the virtual environments and the operating
+system or the physical hardware.
+
+## Container ##
+
+• A software package that packages an application, it’s dependencies
+configuration, libraries needed to run it.
+• This makes sure that an will run reliably on different computing environments.
+• Different OS, HW, Storage, Network, Security policies etc.
+• Containers are lightweight and use less resources than VMs.
+
+## Docker ##
+
+• Docker is a platform for building, running and managing containers.
+• https://www.docker.com/resources/what-container
+• https://docs.docker.com/get-started/overview/
+
+## What is … ##
+
+• Linux - an open source operating system.
+• Ubuntu - is a Linux operating system (a distribution of Linux)
+• vi (Visual Editor) - is the default editor that comes with Linux/Unix
+• Command Mode - every character typed is a command that does something to
+the text file being edited
+• Insert Mode - every character typed is added to the text in the file
+
+#=====================================================================================================================================================================================================================
+
+1. Install Docker Desktop for your operating system.
+
+2. Start a terminal
+
+3. In the terminal type: docker run hello-world - This will start a hello world container and display in the Docker Desktop
+
+4. In the terminal type: docker run -it ubuntu bash - This will install a unbuntu container and display the ubuntu command prompt
+
+5. At the ubuntu command prompt type: 
+    apt update - this will update ubuntu if there are updates
+    apt upgrade - this will upgrade ubuntu if there are upgrades
+    apt install apt install python3 python3-pip curl - this will install python3 pip and curl
+    pip3 install numpy pandas scikit-learn - this will install the libraries
+Now you have installed a container with ubuntu and python
+
+6. Type exit - this will take you out of the container
+
+7. To automate the above process, create a text file named Dockerfile with the following contents and save it. 
+Make sure the file has no extensions like .txt or anything else.
+FROM ubuntu
+ENV PYTHONUNBUFFERED=1
+RUN apt update && \
+    apt upgrade -y && \
+    apt install python3 python3-pip curl -y && \
+    pip3 install numpy pandas scikit-learn
+
+8. From the folder where you have the Dockerfile run this command in the terminal
+
+docker build . -t myimage
+
+This should create a container with ubuntu and python.
