@@ -1,0 +1,27 @@
+.py is an extention that clarifies that it's a python file.
+
+how to use your module by importing it. You 
+
+cmd prompt -
+
+python
+
+dir()
+
+import (module)
+
+globals()
+
+cd "C:\Users\nigel\OneDrive\Desktop\Lambda School\Corse work\Unit 3\Sprint 1"
+
+from os import getcwd 
+
+touch __init__.py - MAC 
+
+type nul > your_file.txt - PC
+
+cat fibo.py - MAC
+
+type fibo.py - PC
+
+python -m pipenv install pandas

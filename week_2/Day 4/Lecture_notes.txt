@@ -1,0 +1,233 @@
+# LEARNING OBJECTIVES #
+
+# Understand and explain the advantages and disadvantages of traditional SQL databases
+# Make informed decisions about alternative databases
+
+#====================================================================================================================================================
+
+# BEFORE LECTURE #
+
+# So far in this sprint you've used SQLite, PostgreSQL, and MongoDB. For each of these, consider the following questions:
+
+# What was easy about using this technology?
+# What was hard about using this technology?
+# What more would you like to learn about it?
+# Write a summary in the style of a possible blog post, and be prepared with questions and/or discussion topics into class. Bonus - later on, follow up and complete a real blog post about different database technologies!
+
+#====================================================================================================================================================
+
+# LIVE LECTURE TASK #
+
+# We covered a lot of ground this week - today we'll bring it together, both summarizing and resolving lingering questions. 
+# We'll also continue the discussion from the before lecture activity, and explore the cutting edge "NewSQL" techniques in active development.
+
+# As time allows, we'll go back to practicing good old SQL. It's important to have a broad awareness of the database universe, but SQL is a time-tested tool that has and will continue to be useful across a wide range of situations. 
+# It will also be the largest part of the sprint challenge, and likely a component of many job interviews.
+
+#====================================================================================================================================================
+
+# NOTES #
+
+## OBJECTIVE 1 ##
+
+## OVERVIEW ## 
+
+# When you only have a hammer, everything looks like a nail. When you only have SQL, must everything be relational?
+
+# For traditional SQL, you do need to fit your data in a relational paradigm. 
+# This is actually not a bad thing - much of the time, it is welcome structure. 
+# But it is important to understand the strengths and weaknesses of traditional databases, to make informed decisions between alternatives.
+
+## FOLLOW ALONG ##
+
+We’ve been using SQL the whole week - what are the tradeoffs of it as a tool?
+
+# The immediate obvious cost of a relational database is the necessity of robustly specifying a schema, including relations between relevant tables. 
+# Another cost that becomes quickly evident with a real-world application - things change! And, while you can use ALTER TABLE to update your schema, it can be pretty tricky to do so and preserve/update existing data to not lose it.
+
+# Another prominent cost, and the main motivation of “big data” proponents of NoSQL, is scalability. 
+# Traditional relational databases need to fit an index for all keys (and sometimes other attributes) in memory - this limits the ability to grow the data beyond a certain size (namely the size where all of your keys fit in however much RAM you can afford).
+
+# This was highly important in the history of Google and several other major Internet companies, as they needed to figure out how to scale while using large quantities of relatively cheap commodity hardware. 
+# The solution is to distribute work across computers - but that requires structuring the work (and the end result) in a fairly clever way. 
+# More on this in the next sprint with Apache Spark!
+
+# But it’s also important to note that, in present day, RAM is actually pretty cheap, and your data is probably not as big as you think it is. 
+# Unless you literally have hundreds of millions of users (and maybe even then), you can with proper structure fit things in main memory and use a relational approach.
+
+# So, what are the advantages of a relational approach? ACID - Atomicity, Consistency, Isolation, Durability 
+# A set of guarantees provided by the use of transactions to ensure that data is always in a valid state, even if e.g. a query inserting new data is interrupted by a failure of any sort (including external to the system such as a power outage).
+
+# Atomicity: a transaction functions as a “unit” - it either succeeds completely, or fails completely
+# Consistency: transactions can only change a database from a valid state to another valid state
+# Isolation: concurrent transactions are isolated from each other, so they have the same results as if they were run sequentially
+# Durability: once a transaction has finished it will survive runtime system failure (it is recorded in non-volatile memory)
+
+# That’s a pretty nice set of guarantees! It should be clear why, for instance, financial data is often suited for the ACID paradigm.
+# But in general, ACID just means “things work reliably as you’d expect”, and it’s nice to have for any application.
+
+# If relational databases have ACID guarantees, what do non-relational approaches have? They usually give up or weaken one of the four qualities - for instance, many big data systems are “eventually consistent”. 
+# This means that there can be intermediary states where the data is actually not consistent, but over time it reaches consistency. 
+# The typical acronym for adopting eventual consistency is BASE - Basically Available, Soft state, Eventually consistent.
+
+#====================================================================================================================================================
+
+# OBJECTIVE 2 #
+
+## OVERVIEW ##
+
+# In tech, we have lots of tools - this leads to the problem of choosing which tools to use when. Relational and non-relational - when should we use one over another, and can we get “the best of both worlds?”
+
+# The first generation of “big data” solutions, as exemplified by Google’s MapReduce (Links to an external site.) paradigm, made significant tradeoffs in the name of scalability. 
+# Most notably, such systems weakened the ACID guarantees, as well as only providing a subset of the full querying functionality of SQL (queries such as sorting generally require comparison of all values in memory). 
+# They allowed companies to scale with available and affordable technology, but also lead many companies to develop solutions that were “bigger” and more complicated than they needed to be.
+
+# SQL is really just a standard for a querying language, albeit one tightly associated with the relational approach. 
+# But since NoSQL became the banner of the initial non-relational approaches, NewSQL has been coined as a term to characterize attempts at extreme scalability that still provide ACID guarantees.
+
+# It’s also good to be aware of security issues - SQL injection is a common family of attacks where user-provided data causes undesired changes in the database. 
+# But despite the name, any database system is potentially vulnerable, and the solution is to always sanitize user input (building queries in your application rather than trusting what they pass in).
+
+## FOLLOW ALONG ##
+
+# A good way to understand the challenges of NoSQL is to envision the MapReduce paradigm. 
+# MapReduce provides a framework for a programmer to specify a job that is then distributed and performed by a potentially large number of worker nodes (horizontal scalability). 
+# At a high level, there are three steps to computation in MapReduce:
+
+# Map: each worker gets a piece of the input data, and applies the given map function to process their data
+# Shuffle: workers redistribute the data based on the key of the output function (collecting common data in single worker nodes)
+# Reduce: workers concurrently process their output data, resulting in final output that is combined by a master node
+# MapReduce is no longer the most current approach for these problems, and for our current purposes it is OK to only understand it at a relatively high level. 
+# It was developed using principles from functional programming (Links to an external site.), and these more general principles are where you are suggested to explore if you want to dig deeper into the topic.
+
+## FUNCTIONAL PROGRAMMING ##
+
+# Functional programming treats functions as first-class citizens - objects in their own right that can be created and manipulated. 
+# This means you can also write higher-order functions (functions that take functions), such as map (apply a function to all items in a collection, returning an equally sized collection) and reduce (apply a function to combine items from a collection, returning a single item).
+
+# It is also more purely mathematical, reducing state (encouraging immutability) and making it easier to reason about work being split up and combined. 
+# This is a deep topic, but the important point for us as data scientists is that MapReduce gave horizontal scalability (tackle bigger problems with more computers) as opposed to vertical (tackle bigger problems with a single bigger computer), and economically horizontal scalability is the superior approach. 
+# Horizontal scalability also has essentially no ceiling, whereas vertical scalability has a hard limit (though these days it is quite high - you can get a single server with 1 terabyte of RAM).
+
+# Because MapReduce splits data essentially randomly (by output key) between workers, it is well-suited for problems where computation order doesn’t matter. 
+# For example, calculating the mean can be done by summing values in any order, and then dividing by the number of values. 
+# MapReduce simple has each worker sum their own arbitrary distinct subset (map), then return those partial sums to be finally added together in total (reduce). 
+# In mathematical terms - addition is commutative (order doesn’t matter), so things work out.
+
+# How do we do better? It’s an open problem! But there are several NewSQL approaches, including shared-nothing (Links to an external site.) architecture (nodes are fully independent) as well as simply heavily optimized SQL datastores (usually organizing data by column). 
+# An important caveat to all of the above - it’s great to keep up on the latest and greatest, but many companies are still maintaining legacy codebases and existing solutions.
+
+# So it is important and valuable to understand all approaches, and be able to work with any of them to create effective solutions.
+
+#====================================================================================================================================================
+
+# POWER POINTS #
+
+## WHY YOU SHOULD KNOW ##
+
+## SQL ## 
+
+## NORMALIZATION ##
+
+# Resource - https://docs.microsoft.com/en-us/office/troubleshoot/access/database-normalization-description
+
+# Normalization is a process of reducing redundancies of data in a database.
+    # Makes it easy to organize and manage data while ensuring the accuracy of data through the database.
+# It is a technique that is used when designing and redesinging a database.
+# Normalization optimally designs a database to reduce redundant data.
+# The actual guidelines of normalization are called normal forms.
+
+# A database that is not normalized might include redundant data - same data that is contained in one more tabs.
+    # Data should not be redundant the duplication of data should be kept to a minimum.
+# This is bad for security, disk space usage, speed of queries, and data integrity.
+# A database before normalization is one that has not been broken down logically into smaller, more manageable tables.
+
+## NORMAL FORMS ##
+
+# First Normal:
+    # The first normal form divides the base data into tables.
+    # When each table has been designed, a primary key is assigned to most or all tables.
+    # Primary key must be a unique value that uniquely identifies a specific piece of data.
+
+# Second Normal:
+    # The second normal form takes data that is only partly dependent on the primary key and enters that data into another table.
+
+## RELATIONAL DBS ## 
+    ## Drawbacks ##
+
+# Organizing data into particular structure.
+# Cannot handle complexity
+# Change to one record needs change to all records
+# Not suitable for Big Data - Volume, Variety, Velocity
+# Scalability
+
+# Usecase - Banks 
+
+## NON-RELATIONAL DBS ##
+
+# Resource - https://www.dummies.com/programming/big-data/data-science/the-mapreduce-programming-paradigm/#:~:text=MapReduce%20is%20a%20programming%20paradigm,into%20smaller%20sets%20of%20tuples.&text=In%20the%20map%20task%2C%20you,transform%20it%2C%20and%20filter%20it.
+
+# The first generation of "big data" solutions, as exemplified by Google's MapReduce paradigm, made significant tradeoffs in the name of scalability.
+# Such systems weakened the ACID guarantees, as well as only providing a subset of the full querying functionality of SQL.
+# They allowed companies to scale with available and 
+
+## NON RELATIONAL DBS ##
+    ## Advantages ##
+
+# No schema
+# Scalability
+    # Biggest advantage of non relational is horizontal scalability.
+# BASE (Basically Available, Soft state, Eventually consistent.)
+    # Basically available
+    # Soft state
+    # Eventually consistent
+
+## NON RELATIONAL DBS ##
+    ## Disadvantages ##
+
+# Lack of consistency
+# Lack of analytics
+# Lack of standardization
+
+## NEW SQL ##
+
+# Resource - https://softwareengineeringdaily.com/2019/02/24/what-is-new-about-newsql/
+
+# Aims to combine/provide benefits of both relational and non-relational dbs.
+    # ACID transactions
+    # Horizontal scalability
+    # High availablity
+    # SQL support
+# Speed, scalability, consistency
+# Ideal for Big Data
+
+# Examples of New SQL:
+    # VoltDB
+        # Website - https://www.voltdb.com/
+        # Doc - https://docs.voltdb.com/
+    # Cloud Spanner
+        # Website - https://cloud.google.com/spanner
+        # Doc - https://cloud.google.com/spanner/docs
+    # CockroachDB
+        # Website - https://www.cockroachlabs.com/
+        # Doc - https://www.cockroachlabs.com/docs/stable/
+
+## DATA REPOSITORIES ##
+
+# Centralized data repositories
+# Data Warehouse
+    # Structured data
+    # Relational
+    # Example - https://www.oracle.com/database/what-is-a-data-warehouse/
+# Data lake
+    # Structured and Non-Structured data
+    # Example - https://aws.amazon.com/big-data/datalakes-and-analytics/what-is-a-data-lake/
+
+# Production Database
+    # For consumer
+# Development Database
+    # For development
+# Your own instance of DB
+    # For only your data that you're minipulating that's assigned to you.
+
+#====================================================================================================================================================

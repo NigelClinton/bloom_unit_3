@@ -1,0 +1,52 @@
+#import sqlite3
+import sqlite3
+
+#establish connection
+conn = sqlite3.connect('rpg_sqlite3')
+
+#create cursor object
+cur = conn.cursor()
+
+#assigning a variable to a cursor execution
+result = cur.execute("SELECT = from armor_item;")
+
+#display 1 row from your SQL command
+result.fetchone()
+
+#displaying all amount of rows from your SQL command
+result.fetchall()
+
+#creating a query that includes all infromation from the armor_item table
+query = "SELECT * from armor_item;"
+
+#assigning the cursor execution of your query variable
+result = cur.execute(query)
+
+#displaying (x) amount of rows from your SQL command
+result.fetchmany(10)
+
+# Create table
+cur.execute('''CREATE TABLE stocks(date text, trans text, symbol text, qty real, price real)''')
+
+# Insert a row of data
+cur.execute("INSERT INTO stocks VALUES ('2006-01-05','BUY','RHAT',100,35.14)")
+
+#To retrieve data after executing a SELECT statement, you can treat the cursor as an iterator
+#This example uses the iterator form:
+for row in cur.execute('SELECT * FROM stocks ORDER BY price'):
+    print(row)
+
+#Output:
+#('2006-01-05', 'BUY', 'RHAT', 100, 35.14)
+#('2006-03-28', 'BUY', 'IBM', 1000, 45.0)
+#('2006-04-06', 'SELL', 'IBM', 500, 53.0)
+#('2006-04-05', 'BUY', 'MSFT', 1000, 72.0)
+
+# Save (commit) the changes
+con.commit()
+
+#Row Count function: *** ask tomrrow about this
+rowcount
+
+#close connection
+conn.close()

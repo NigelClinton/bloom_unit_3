@@ -1,0 +1,50 @@
+#import sqlite3
+import sqlite3
+
+#Create a connection
+conn = sqlite3.connect('rpg_db.sqlite3')
+
+#Create a cursor object
+cur = conn.cursor()
+
+#Execute quary
+result = cur.execute("SELECT * from armory_item;")
+
+#Fetch one record
+result.fetchone()
+
+#fetch many records (x)
+result.fetchmany(5)
+
+#fetch all records
+result.fetchall()
+
+#Good habit to always close the connection to the database after working with it
+conn.close()
+
+
+#SQL Commands 
+
+SELECT*
+FROM armory_item;
+
+#(When you use *, this will quary everything from the table and show you everthing.)
+
+JOIN armory_weapon
+ON armory_item.item_id=armory_weapon.item_ptr_id;
+
+#(This will show you all the armory wepons that have a relationship with the items within the armory item table)
+#"X" = Armory_item
+#"Y" = Armory_weapon
+
+SELECT*
+FROM armory_item as ai
+JOIN armory_weapon as aw
+ON ai_item.item_id=aw_weapon.item_ptr_id;
+
+#(You can use as - ___ similar to python for using abreviations)
+
+# JOIN will only display the common between the two tables - MOST COMMON
+# LEFTJOIN will show everything from the first table, and if there's no attribute from the second table it will provide a null value
+# RIGHTJOIN will do ^ but for the left table vs right
+# SQLight doesn't do RIGHT JOIN but if you want to get that result flip the ai_item.item_id=aw_weapon.item_ptr_id; to - aw_weapon.item_ptr_id=ai_item.item_id;

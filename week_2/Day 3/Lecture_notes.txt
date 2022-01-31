@@ -1,0 +1,241 @@
+# Module 3 #
+
+# NoSQL and Document-Oriented Databases
+# NoSQL is a method we use to interact with a non-relational database. 
+# We learned how we can use SQL to interact with a relational database and now we see its counterpart today.
+
+#====================================================================================================================================================
+
+# LEARNING OBJECTIVES #
+
+# Understand and explain the advantages and disadvantages of traditional SQL databases
+# Make informed decisions about alternative databases
+
+#====================================================================================================================================================
+
+## Before Lecture ## 
+
+# Sign up for an account at MongoDB Atlas, the official hosted service of MongoDB with a generous (500mb) free tier.
+    # Website - https://www.mongodb.com/cloud/atlas
+# You can also explore the many MongoDB tools out there, though none in particular are recommended or required for installation (we're really just checking out MongoDB as a way to understand document-oriented databases. 
+    # Website - http://mongodb-tools.com/
+# It's unlikely to become a core part of your toolkit the way SQLite and PostgreSQL may).
+
+#====================================================================================================================================================
+
+## LIVE LECTURE ## 
+
+## Objective 01 ## 
+
+Resource - https://utcc.utoronto.ca/~cks/space/blog/programming/DatabasesAlwaysSchemas
+Resource - https://news.ycombinator.com/item?id=19158854
+Resource - https://fauna.com/blog/comparison-of-scalable-database-isolation-levels
+
+## REQUIRED RESOURCES ##
+
+# Review each preclass resource before class.
+
+# Red Hat Satellite standardizing on PostgreSQL backend
+# HN Discussion comparing MongoDB to PostgreSQL and SQLite.
+
+## OVERVIEW ## 
+
+There’s a lot of hype for Big Data - what are the actual use cases? One common case is document-oriented databases (also known as document stores), which are great for storing large amounts of, well, documents (generally unstructured or semi-structured content).
+
+# Some people refer to these as “NoSQL” - but really, that is an imprecise label (anything that isn’t SQL is “NoSQL”). 
+# More specifically, these are non-relational approaches to storing and retrieving data.
+
+# Document-oriented databases are a common subset of key-value stores - a general non-relational database paradigm.
+# You’ve already interacted with structures like this! The general data structure abstraction is known as the hash table (Links to an external site.) (or hash map), and common real-world implementations are Python dictionaries and JSON.
+    # Website - https://en.wikipedia.org/wiki/Hash_table
+
+# How is a document-oriented database different? It’s bigger, and (usually) run on somebody else’s computer (or computers). 
+# Because values are indexed by key hashes, it is relatively easily to split the data across multiple instances, and figure out which instance is needed to actually retrieve a given record.
+
+# Traditional SQL databases are more difficult to scale, as they calculate an index for each table based on its primary key, and these indices must live in-memory in a single server. 
+# There are new approaches to work around this which we will discuss tomorrow (e.g. PostgreSQL sharding), but it is true that non-relational approaches are still at least conceptually easier to scale.
+
+# Another important distinction - as we’ve seen, SQL databases require specifying a schema (what your data/types are) up-front. 
+# Document-oriented databases can generally take any sort of key-value pairs, including nested key-values, allowing you to flexibly store data without preemptively specifying structure. 
+# Some argue that this allows for faster prototyping, and is good for situations where you need to rapidly develop something that is likely to be completely rewritten in the long term anyway.
+
+# But there is an important caveat - though some may characterize NoSQL as being “schema-free”, it really just delays the necessity of a schema. 
+# Eventually your application needs to know what fields it is asking for (and probably what types they are). 
+# One way to characterize this approach is “schema-on-read”, as querying a document store usually requires specifying which key/value pairs you want. 
+# This is in contrast with “schema-on-write”, the approach of traditional SQL (which then lets you do things like SELECT * more easily, with some guarantees for what you’re getting).
+
+## FOLLOW ALONG ## 
+
+# Consider the following situations:
+    # A bank, with mission-critical data demanding high reliability and integrity
+        # Relational 
+    # A 2-person startup, rapidly developing a prototype in a week to demonstrate to investors
+        # Non-Relational
+    # A medium size company, profitable and established in their niche, building a new product offering
+        # Non-Relational then create pipeline to eventually migrate to Relational
+    # A large company, in the same situation as the prior medium size company
+        # Non-Relational then create pipeline to eventually migrate to Relational 
+
+# Think for a moment - which sort of database (relational or non-relational) would you recommend in which situation?
+
+# The first situation (the bank) arguably demands a relational approach. 
+# Banks should be well-defined in their data, so an up-front schema is a fine requirement. 
+# Banks also benefit more from the reliability of SQL than the scalability of document-oriented databases.
+
+# The second situation could go either way, but many would suggest document-oriented databases. 
+# You can quickly make and throw away things without worrying about a schema, and you’re likely to rewrite everything after you get investor approval anyway. 
+# Overall when prototyping though - go with the tools you know. 
+# If the two people involved happen to be really experienced with PostgreSQL, that is likely to be a better approach.
+
+# The third situation is similarly dependent on details, but erring towards relational is likely the right decision. 
+# Many companies think they have larger data than they have - PostgreSQL is likely to scale up just fine, and if you’re an established company you have the time to plan and develop something with structure.
+
+# The fourth situation is deceptively similar to the third one: 
+# Even a larger company can get by with relational! The main exception would be if they know they are developing a product that is closely related to their existing line and will thus immediately see significant usage and “big” data. 
+# But otherwise, even a large company can get a lot of mileage out of SQL, and benefits even more from the clarity and structure of a schema (due to having more developers and a larger ecosystem).
+
+# In the last two situations it’d also be worth considering modern “NewSQL” approaches, which try to combine the best of both worlds (structure from relational, scale from non-relational). 
+# More on this in the next module!
+
+#====================================================================================================================================================
+
+## OBJECTIVE 02 ## 
+
+Resource - https://docs.atlas.mongodb.com/getting-started/
+Resource - https://pymongo.readthedocs.io/en/stable/
+Resource - https://duckduckgo.com/?q=pwgen&ia=answer
+Resource - https://info-mongodb-com.s3.amazonaws.com/ReferenceCards15-PDF.pdf
+Resource - https://aws.amazon.com/documentdb/
+Resource - https://www.researchgate.net/profile/Javier-Andreu-Perez/publication/280124446/figure/fig2/AS:284445564260357@1444828515809/Six-Vs-of-big-data-value-volume-velocity-variety-veracity-and-variability-which.png
+
+## OVERVIEW ## 
+
+# MongoDB makes it quite easy to have data in the cloud - it won’t be the sort of data you’re necessarily used to, but it is useful and is a tool that many web apps depend on.
+
+# A good mental abstraction for MongoDB is that it is “big JSON in the cloud” - it lets you save and retrieve (persist) JSON-serialized data, at scale, over a network. 
+# Since JSON is a ubiquitous format, widely supported by browsers and web applications, this is pretty handy.
+
+# But there is an important caveat - from a data science perspective, “unstructured key-value pairs” aren’t the most useful way to have data. 
+# They’re great for application development - just save things and retrieve them when you need them, but use a key instead of an inscrutable memory address. 
+# But this variety means that you end up with a collection of heterogeneous documents - you aren’t guaranteed that they all have the same fields, so you can’t just throw them in a DataFrame and work with them.
+
+# Nonetheless, you will encounter document-oriented databases in some form or another, and with proper care it is possible to get useful data from them.
+
+## FOLLOW ALONG ##
+
+Follow the instructions for Getting Started with MongoDB Atlas (Links to an external site.) - registration is free, and the default options are generally all fine. 
+    Website - https://docs.atlas.mongodb.com/getting-started/
+You may have to wait some for your cluster to actually be generated - it’s actually spinning up multiple nodes, demonstrating the natural scalability of non-relational approaches.
+
+# Once it is finished, you can click the Connect button for your sandbox cluster - you have to specify a username and password, and it is suggested you randomly generate and save these values somewhere. 
+# You can generate random strings by clicking here (Links to an external site.) (refresh for new ones), and use one for username and another for password (but save them somewhere locally so you remember them!).
+    # Website - https://duckduckgo.com/?q=pwgen&ia=answer
+
+# Also, make sure to whitelist (Links to an external site.) your current IP address! This will allow you to connect through the firewall that will protect your cluster. 
+    # Website - https://help.gooddata.com/doc/enterprise/en/building-on-gooddata-platform/gooddata-architecture/ip-whitelisting#:~:text=IP%20whitelisting%20is%20a%20security,users%20can%20access%20your%20domains.
+# If you would like to connect from a Colab or another hosted notebook? Run !curl https://ipecho.net/plain to find the IP address. 
+    # Note - it seems Colab IP addresses all start with 35., so you can whitelist all of them with the rule 35.0.0.0/8.
+
+# Next for connection method, select “Connect Your Application” (the other two methods require installing local tools - check out the extension links if you’re curious). 
+# Copy the “Standard connection string”, replace username/password with the ones you used, and use as follows (replacing the string passed to pymongo.MongoClient):
+    import pymongo
+        client = pymongo.MongoClient("mongodb://<USERNAME>:<PASSWORD>@mycluster0-shard-00-00.mongodb.net:27017,mycluster0-shard-00-01.mongodb.net:27017,mycluster0-shard-00-02.mongodb.net:27017/admin?ssl=true&replicaSet=Mycluster0-shard-0&authSource=admin")
+        db = client.test
+
+# Congratulations - you’re connected to your MongoDB! 
+# PyMongo interacts with MongoDB, giving/retrieving Python dicts from it, but with an important caveat - all keys must be strings, so that it can be cleanly translated to JSON by MongoDB.
+
+result = db.test.insert_one({'stringy key': [2, 'thing', 3]})
+print(result.inserted_id)
+print(db.test.find_one({'stringy key': [2, 'thing', 3]}))
+
+# You should see output like:
+
+# 5c6a0505d04bc70096888c2e
+# {'_id': ObjectId('5c6a0505d04bc70096888c2e'), 'stringy key': [2, 'thing', 3]}
+#====================================================================================================================================================
+
+## WRITTEN NOTES ## 
+
+Resource - https://docs.mongodb.com/manual/reference/sql-comparison/
+Resource - https://pymongo.readthedocs.io/en/stable/installation.html
+Resource - https://docs.atlas.mongodb.com/getting-started/
+
+# Big Data most important 3 V's - 
+    # Volume 
+    # Variety 
+    # Volacity
+
+Work flow - 
+    capturing the data 
+    storing the data, 
+    looking at the data and making analytics
+    then possibly giving the data structure
+
+### JSON ### 
+
+Resource - https://www.json.org/json-en.html
+
+# JSON (JavaScript Object Notation) is a lightweight data-interchange format. 
+# It is easy for humans to read and write. It is easy for machines to parse and generate. 
+# It is based on a subset of the JavaScript Programming Language Standard ECMA-262 3rd Edition - December 1999. 
+# JSON is a text format that is completely language independent but uses conventions that are familiar to programmers of the C-family of languages, including C, C++, C#, Java, JavaScript, Perl, Python, and many others. 
+# These properties make JSON an ideal data-interchange language.
+
+# JSON is built on two structures:
+    # A collection of name/value pairs. 
+        # In various languages, this is realized as an object, record, struct, dictionary, hash table, keyed list, or associative array.
+    # An ordered list of values. 
+        # In most languages, this is realized as an array, vector, list, or sequence.
+
+# These are universal data structures. 
+# Virtually all modern programming languages support them in one form or another. 
+# It makes sense that a data format that is interchangeable with programming languages also be based on these structures.
+
+# In JSON, they take on these forms:
+
+# An object is an unordered set of name/value pairs. 
+# An object begins with { (left brace) and ends with } (right brace). 
+# Each name is followed by : (colon) and the name/value pairs are separated by , (comma).
+
+# An array is an ordered collection of values.
+# An array begins with [ (left bracket) and ends with ] (right bracket). 
+# Values are separated by , (comma).
+
+# A string is a sequence of zero or more Unicode characters, wrapped in double quotes, using backslash escapes. 
+# A character is represented as a single character string. 
+# A string is very much like a C or Java string.
+
+# A number is very much like a C or Java number, except that the octal and hexadecimal formats are not used.
+
+# Whitespace can be inserted between any pair of tokens. 
+# Excepting a few encoding details, that completely describes the language.
+
+
+#====================================================================================================================================================
+
+## Coding Notes ## 
+
+#Mongo user information
+# User: pmuserds30
+# Pass: Livelife1995
+# DBNAME: test
+
+#Connection application code
+# client = pymongo.MongoClient("mongodb+srv://pmuserds30:<password>@cluster0.i3uoh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+# db = client.test
+
+#information about connection
+# Replace <password> with the password for the pmuserds30 user. 
+# Replace myFirstDatabase with the name of the database that connections will use by default. 
+# Ensure any option params are URL encoded.
+
+#Edited information pretaining to this connection
+# client = pymongo.MongoClient("mongodb+srv://pmuserds30:<password>@cluster0.i3uoh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+# db = client.test
+
+# client
+
+# db = client.test
+
+#====================================================================================================================================================

@@ -1,0 +1,95 @@
+### USE ELEPHANT SQL WEBSITE ###
+
+#Import libary
+import pyscopg2
+
+#Create connection variables
+dbname = "wtjnvyve"
+user = "wtjnvyve"
+password = "APZ5ovhYkyOh9P0ml48zitzoclq9mI0r"
+host = "chunee.db.elephantsql.com"
+
+#establish connection
+con = psycopg2.connect(dbname=dbname,user=user,password=password,host=host)
+
+#verify connection
+con
+
+#Create cursor
+cur = con.cursor()
+
+#Command to create a table that includes the priamry key, datatype, and value specification
+cur.execute("""
+            CREATE TABLE fruit (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(50) NOT NULL,
+                quantity INTEGER)
+                """)
+
+#populate data to table that was created above
+cur.execute(
+    "INSERT INTO fruit (name,quantity) VALUES (%s, %s)",
+    ("apple",10)
+)
+
+#query to select all data from fruit table
+cur.execute("SELECT * FROM fruit")
+
+#Fetch all to retrieve all records listed in our fruit table
+cur.fetchall()
+
+#Every time you do an insert or an update you commit to the database to show changes
+con.commit()
+
+#======================================================================================================
+### USE ELEPHANT SQL WEBSITE ###
+
+#RPG database
+
+#import libaries
+import sqlite3
+import psycopg2
+
+#Create connection to database
+s_conn = sqlite3.connect("../Day 1-2/rpg_db.sqlite3")
+
+#Create cursor
+s_cur = s_conn.cursor()
+
+#create rows for database 
+rows = s_cur.execute("SELECT name,value,weight from armory_item;").fetchall()
+
+#Create connection variables
+dbname = "wtjnvyve"
+user = "wtjnvyve"
+password = "APZ5ovhYkyOh9P0ml48zitzoclq9mI0r"
+host = "chunee.db.elephantsql.com"
+
+#Create cursor object
+p_cur = p_con.cursor()
+
+#Create armor_item table
+p_cur.execute("""
+    CREATE TABLE armory_item (
+        item_id SERIAL PRIMARY KEY,
+        name VARCHAR(30),
+        value INTEGER,
+        weight INTEGER)
+    """)
+)
+
+#assign values, then populate them using the insert variable function using the INSERT function
+values = ','.join(['%s']*len*(rows))
+insert_query = 'INSERT INTO armor_item (name,value,weight) values{}'.format(values)
+
+#Cursor execute query command
+p_cur.execute(insert_query, rows)
+
+#specification for the table that the fetch function will be targeting
+p_cur.execute("SELECT * FROM armor_item;")
+
+#Fetch all to show all records inserted using the functions above
+p_cur.fetchall()
+
+#Commit the changes / records inserted to the database
+p_con.commit()

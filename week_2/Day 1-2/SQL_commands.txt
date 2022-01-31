@@ -1,0 +1,119 @@
+#Displaying all information pertaining to the armory_item table
+SELECT*
+FROM armory_item;
+
+#Selecting specific columns from the armory_item table
+SELECT name, value
+FROM armory_item;
+
+#Selecting specific columns from the charactercreator_character table
+SELECT name,level,strength
+FROM charactercreator_character;
+
+#Gives information about the armory_item table
+PRAGMA table_info(armory_item);
+
+#Selecting infromation pertaining to the armory_item table, that includes only the values = to 0
+SELECT*
+FROM armory_item
+WHERE value=0;
+
+#Selecting infromation pertaining to the armory_item table, that includes only the values != to 0
+SELECT*
+FROM armory_item
+WHERE value<>0;
+
+#Selecting infromation pertaining to the armory_item table, that includes only the values = to 0, and weight = 0
+SELECT*
+FROM armory_item
+WHERE value=0
+AND weight=0;
+
+#Selecting infromation pertaining to the armory_item table, where the name IS 'Qui'
+SELECT*
+FROM armory_item
+WHERE name='Qui';
+
+#Selecting infromation pertaining to the armory_item table, where the name includes names like 'Qui'
+SELECT*
+FROM armory_item
+WHERE name like 'Qui%';
+
+#Selecting infromation pertaining to the armory_item table, where the name includes patterns with 'ua' in the middle
+SELECT*
+FROM armory_item
+WHERE name like '%ua%';
+
+# Merge join for items tables to include only the items
+SELECT ai.*, aw.power
+FROM armor_item as ai
+LEFT JOIN armory_weapon as aw
+ON ai.item_id=aw.item_ptr_id;
+
+# Merge join for items tables to include only the weapons
+SELECT ai.*, aw.power
+FROM armory_weapon as aw
+LEFT JOIN armory_item as ai
+ON ai.item_id=aw.item_ptr_id;
+
+#Example groupby function
+SELECT c1, aggregate_function(c2)
+FROM table
+GROUP BY c1;
+
+SELECT *
+FROM a
+JOIN b ON a.id=b.id;
+
+SELECT *
+FROM a, b
+WHERE a.id = b.id;
+
+SELECT *
+FROM Product
+ORDER BY UnitPrice DESC
+LIMIT 10;
+
+SELECT AVG(HireDate-BirthDate)
+FROM Employee;
+
+SELECT City,AVG(HireDate-BirthDate)
+FROM Employee
+GROUP BY City;
+
+SELECT *, SupplierName
+FROM ProductDetails_V
+ORDER BY 6 DESC
+LIMIT 10;
+
+SELECT p.*, s.CompanyName
+FROM Product p, Supplier s
+Where p.SupplierId = s.Id
+LIMIT 10;
+
+SELECT c.CategoryName, COUNT(DISTINCT ProductName)
+FROM Product p, Category c
+Where c.Id = p.CategoryId
+GROUP BY CategoryName
+ORDER BY 2 DESC
+LIMIT 1;
+
+SELECT et.EmployeeId, COUNT(t.Id)
+FROM EmployeeTerritory et, Territory t
+Where et.TerritoryId = t.Id
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 1;
+
+SELECT e.Id, e.FirstName, e.LastName, COUNT(DISTINCT t.Id)
+FROM Territory t, Employee e, EmployeeTerritory et
+WHERE e.Id = et.EmployeeId AND t.id = et.TerritoryId
+GROUP BY 1, 2, 3 ORDER BY 4 DESC LIMIT 1;
+
+SELECT p.ProductName, p.UnitPrice, s.CompanyName 
+FROM Product p, Supplier s WHERE p.SupplierId = s.Id
+ORDER BY p.UnitPrice DESC LIMIT 10;
+
+SELECT c.CategoryName, COUNT(DISTINCT p.Id)
+FROM Category c, Product p WHERE c.Id = p.CategoryId 
+GROUP BY 1 ORDER BY 2 DESC LIMIT 1;

@@ -1,0 +1,166 @@
+# INSTRUCTIONS - 
+
+# Reproduce the live lecture task of setting up and inserting the RPG data 
+# (specifically the charactercreator_character, charactercreator_character_inventory, armory_item, and armory_weapon)
+
+# Your documents in MongoDB should contain the character traits
+# (name, lvel, etc.) and skills (strength, wisdom, etc.) and a list of their items
+
+# You should also store the weapons as a list in another key value pair 
+# (you will have duplicate items in both items and weapons) - see the example below
+
+# mongo_document = {
+#  "name": <VALUE>,
+#  "level": <VALUE>,
+#  "exp": <VALUE>,
+#  "hp": <VALUE>,
+#  "strength": <VALUE>,
+#  "intelligence": <VALUE>,
+#  "dexterity": <VALUE>,
+#  "wisdom": <VALUE>,
+#  "items": [
+#    <ITEM NAME>,
+#    <ITEM NAME>
+#  ],
+#  "weapons" [
+#    <ITEM NAME>,
+#    <ITEM NAME>
+#  ]
+#}
+
+# Then answer the following questions in your README.md file:
+
+# How was working with MongoDB different from working with PostgreSQL?
+# What was easier, and what was harder?
+
+# Please turn in the MongoDB python file you used to generate the documents as well as your README.md
+# It is suggested to then revisit the first two modules, rework/complete things as needed, and review the content with fresh eyes the SQL approach.
+# Compare and contrast, and come prepared to claass with questions - the main topic will will discuss will be database differences and tradeoffs!
+
+#=============================================================================================================================================
+## IMPORT lIBRARIES ##
+
+#import libraries
+import pymongo
+import sqlite3
+
+#===================================================================================================
+## ESTABLISH CONNECTION ##
+
+#establish connection
+client = pymongo.MongoClient("mongodb+srv://pmuserds30:Livelife1995@cluster0.i3uoh.mongodb.net/test?retryWrites=true&w=majority")
+
+#confirm connection
+client
+
+#assign db
+db = client.test
+
+#check directory
+dir(db.test)
+
+#establish connection
+s_conn = sqlite3.connect('rpg_db.sqlite3')
+
+#create a cursor object
+s_cur = s_conn.cursor()
+
+#===================================================================================================
+## charactercreator_character TABLE ##
+
+#assigning the rows from the charactercreator_character
+rows = s_cur.execute("SELECT * FROM charactercreator_character;").fetchall()
+
+#List comprehention for creating columns in table
+columns = [d[0] for d in s_cur.description]
+
+#for loop to import the data into a list
+charactercreator_character_doc = []
+for row in rows:
+    charactercreator_character_doc.append(dict(zip(columns,row)))
+
+#insert many to populate the table
+db.character.insert_many(charactercreator_character_doc)
+
+#===================================================================================================
+## charactercreator_character_inventory TABLE ##
+
+#assigning the rows from the charactercreator_character_inventory 
+rows = s_cur.execute("SELECT * FROM charactercreator_character_inventory;").fetchall()
+
+#List comprehention for creating columns in table
+columns = [d[0] for d in s_cur.description]
+
+#for loop to import the data into a list
+charactercreator_character_inventory_doc = []
+for row in rows:
+    charactercreator_character_inventory_doc.append(dict(zip(columns,row)))
+
+#insert many to populate the table
+db.character_inventory.insert_many(charactercreator_character_inventory_doc)
+
+#===================================================================================================
+## ARMORY ITEM TABLE ##
+
+#assigning the rows from the armory item table
+rows = s_cur.execute("SELECT name FROM armory_item;").fetchall()
+
+#List comprehention for creating columns in table
+columns = [d[0] for d in s_cur.description]
+
+#for loop to import the data into a list
+armory_item_doc = []
+for row in rows:
+    armory_item_doc.append(dict(zip(columns,row)))
+
+#insert many to populate the table
+db.armory_item.insert_many(armory_item_doc)
+
+#===================================================================================================
+## ARMORY WEAPON TABLE ##
+
+#assigning the rows from the armory weapon table
+rows = s_cur.execute("SELECT name FROM armory_weapon;").fetchall()
+
+#List comprehention for creating columns in table
+columns = [d[0] for d in s_cur.description]
+
+#for loop to import the data into a list
+armory_weapon_doc = []
+for row in rows:
+    armory_weapon_doc.append(dict(zip(columns,row)))
+
+#insert many to populate the table
+db.weapon_item.insert_many(armory_weapon_doc)
+
+#===================================================================================================
+
+## FINALIZE AND CLOSE CONNECTION ##
+
+#Commit the changes / records inserted to the database
+p_con.commit()
+
+#close connection
+conn.close()
+
+#===================================================================================================
+
+# Then answer the following question in your README.md file:
+
+# How was working with MongoDB different from working with PostgreSQL?
+    # MongoDB's code was more python based and PostgreSQL's was more SQL based.
+# What was easier, and what was harder?
+    # MongoDB was a bit easier to use since it reminded me of python. 
+    # PostgreSQL would take a bit more practice for it to flow naturally since I have limited experience in the language.
+
+#===================================================================================================
+
+## QUESTIONS ##
+
+# Do I merge everything onto the charactercreator_character table?
+    # If so, how do I go about doing it? 
+        # Is this the doc - https://docs.mongodb.com/manual/reference/operator/aggregation/merge/#mongodb-pipeline-pipe.-merge
+# Do I include all of the columns from each table when doing my select function? (SELECT * Vs specification)
+# How does the name of the DB get created? (db.test)
+    # is this created on the inital connection, then whatever you fill in for the variable it names it?
+

@@ -1,0 +1,85 @@
+## INSTRUCTIONS ## 
+
+# Go back to both your deployed PostgreSQL(SQL) (Titanic data) and MongoDB (RPG data) instances - use MongoDB queries to answer the questions from the first module (when the RPG data was in SQLite):
+
+## RPG DB ##
+
+# How many total Characters are there?
+# How many total Items?
+# How many of the Items are Weapons? How many are not?
+# How many Items does each Character have? (Return first 20 rows)
+# How many Weapons does each Character have? (Return first 20 rows)
+# On average, how many Items does each Character have?
+# On average, how many Weapons does each Character have?
+
+#==========================================================================================
+
+## CODE ##
+
+## IMPORT lIBRARIES ##
+
+#import libraries
+import pymongo
+import sqlite3
+
+#==========================================================================================
+
+## ESTABLISH CONNECTION ##
+
+#establish connection
+client = pymongo.MongoClient("mongodb+srv://pmuserds30:Livelife1995@cluster0.i3uoh.mongodb.net/test?retryWrites=true&w=majority")
+
+#confirm connection
+client
+
+#assign db
+db = client.test
+
+#check directory
+dir(db.test)
+
+#establish connection
+s_conn = sqlite3.connect('rpg_db.sqlite3')
+
+#create a cursor object
+s_cur = s_conn.cursor()
+
+#==========================================================================================
+
+## Queries ##
+
+# How many total Characters are there?
+db.charactercreator_character.count()
+
+#DF read in csv
+df = pd.read_csv("titanic.csv")
+
+#DF to SQL
+df.to_sql('df', conn, if_exists='append',index=False)
+
+#==========================================================================================
+
+## TITANIC DB ##
+
+# Then with PostgreSQL, answer the following about the your titanic database:
+
+# How many passengers survived, and how many died?
+# How many passengers were in each class?
+# How many passengers survived/died within each class?
+# What was the average age of survivors vs nonsurvivors?
+# What was the average age of each passenger class?
+# What was the average fare by passenger class? By survival?
+# How many siblings/spouses aboard on average, by passenger class? By survival?
+# How many parents/children aboard on average, by passenger class? By survival?
+# Do any passengers have the same name?
+
+#==========================================================================================
+
+# Please compare and contrast the difference between these forms of querying and relate it back to the differences discussed in lesson today. 
+# Please turn into Canvas your list of PostGreSQL and MongoDB database queries - this can be in any format (.py, .ipynb, etc.).
+
+#==========================================================================================
+
+## QUESTIONS ##
+
+# Resources / One example for the On average section
